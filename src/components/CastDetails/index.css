@@ -1,0 +1,48 @@
+.cast-item-container {
+  width: 22%;
+  margin: 15px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 5px;
+  height: 450px;
+}
+.cast-image {
+  width: 100%;
+  height: 300px;
+  border-radius: 5px;
+}
+.cast-name {
+  color: black;
+  font-family: 'Roboto';
+  font-size: 23px;
+  font-weight: bold;
+  margin: 15px;
+}
+.cast-para {
+  font-family: 'Roboto';
+  font-size: 20px;
+  color: #e62e0e;
+  font-weight: 500;
+  margin: 15px;
+}
+.char {
+  color: black;
+  font-size: 17px;
+}
+
+@media (max-width: 1180px) {
+  .cast-item-container {
+    width: 30%;
+  }
+}
+
+@media (max-width: 960px) {
+  .cast-item-container {
+    width: 40%;
+  }
+}
+
+@media (max-width: 550px) {
+  .cast-item-container {
+    width: 80%;
+  }
+}

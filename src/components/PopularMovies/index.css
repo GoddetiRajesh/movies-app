@@ -27,3 +27,17 @@
   align-items: center;
   overflow-y: auto;
 }
+.custom-button {
+  border: none;
+  border-radius: 10px;
+  height: 37px;
+  width: 60px;
+  font-family: 'Roboto';
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px;
+  background-color: #f06007;
+  color: white;
+  margin: 10px;
+}

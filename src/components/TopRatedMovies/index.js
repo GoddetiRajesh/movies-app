@@ -12,12 +12,18 @@ const apiStatusConstants = {
   inProgress: 'IN_PROGRESS',
 }
 
+const listpages = []
+for (let i = 1; i <= 20; i += 1) {
+  listpages.push(i)
+}
+
 class TopRatedMovies extends Component {
   state = {
     apiStatus: apiStatusConstants.initial,
     topRatedMoviesData: [],
     pageNo: 1,
     totalPages: 0,
+    pagesList: listpages,
   }
 
   componentDidMount() {
@@ -55,21 +61,68 @@ class TopRatedMovies extends Component {
         totalPages = 500
       }
 
-      const totalPagesList = []
-      for (let i = 1; i <= totalPages; i += 1) {
-        totalPagesList.push(i)
-      }
-
       this.setState({
         apiStatus: apiStatusConstants.success,
         topRatedMoviesData: updatedData,
-        totalPages: totalPagesList,
+        totalPages,
       })
     }
   }
 
   updatedPageNo = no => {
     this.setState({pageNo: no}, this.getTopRatedMoviesData)
+  }
+
+  goToPrevPage = () => {
+    const {totalPages, pagesList, pageNo} = this.state
+    if (pageNo < totalPages && pageNo > 1) {
+      if (pagesList[0] === pageNo) {
+        const list = []
+        for (let i = pageNo - 20; i <= pageNo - 1; i += 1) {
+          list.push(i)
+        }
+        this.setState(
+          prevState => ({
+            pageNo: prevState.pageNo - 1,
+            pagesList: list,
+          }),
+          this.getTopRatedMoviesData,
+        )
+      } else {
+        this.setState(
+          prevState => ({
+            pageNo: prevState.pageNo - 1,
+          }),
+          this.getTopRatedMoviesData,
+        )
+      }
+    }
+  }
+
+  goToNextPage = () => {
+    const {totalPages, pagesList, pageNo} = this.state
+    if (pageNo < totalPages) {
+      if (pagesList[pagesList.length - 1] === pageNo) {
+        const list = []
+        for (let i = pageNo + 1; i <= pageNo + 20; i += 1) {
+          list.push(i)
+        }
+        this.setState(
+          prevState => ({
+            pageNo: prevState.pageNo + 1,
+            pagesList: list,
+          }),
+          this.getTopRatedMoviesData,
+        )
+      } else {
+        this.setState(
+          prevState => ({
+            pageNo: prevState.pageNo + 1,
+          }),
+          this.getTopRatedMoviesData,
+        )
+      }
+    }
   }
 
   renderLoadingView = () => (
@@ -79,7 +132,7 @@ class TopRatedMovies extends Component {
   )
 
   renderSuccessView = () => {
-    const {topRatedMoviesData, totalPages} = this.state
+    const {topRatedMoviesData, pagesList, pageNo} = this.state
 
     return (
       <>
@@ -90,13 +143,32 @@ class TopRatedMovies extends Component {
           ))}
         </ul>
         <ul className="pages-list-container">
-          {totalPages.map(eachItem => (
+          <li>
+            <button
+              onClick={this.goToPrevPage}
+              type="button"
+              className="custom-button"
+            >
+              Prev
+            </button>
+          </li>
+          {pagesList.map(eachItem => (
             <Pages
               key={eachItem}
               pageNo={eachItem}
+              no={pageNo}
               updatedPageNo={this.updatedPageNo}
             />
           ))}
+          <li>
+            <button
+              onClick={this.goToNextPage}
+              type="button"
+              className="custom-button"
+            >
+              Next
+            </button>
+          </li>
         </ul>
       </>
     )

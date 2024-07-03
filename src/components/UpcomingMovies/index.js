@@ -12,12 +12,18 @@ const apiStatusConstants = {
   inProgress: 'IN_PROGRESS',
 }
 
+const listpages = []
+for (let i = 1; i <= 29; i += 1) {
+  listpages.push(i)
+}
+
 class UpcomingMovies extends Component {
   state = {
     apiStatus: apiStatusConstants.initial,
     upcomingMoviesData: [],
     pageNo: 1,
     totalPages: 0,
+    pagesList: listpages,
   }
 
   componentDidMount() {
@@ -54,21 +60,41 @@ class UpcomingMovies extends Component {
       if (totalPages > 500) {
         totalPages = 500
       }
-      const totalPagesList = []
-      for (let i = 1; i <= totalPages; i += 1) {
-        totalPagesList.push(i)
-      }
 
       this.setState({
         apiStatus: apiStatusConstants.success,
         upcomingMoviesData: updatedData,
-        totalPages: totalPagesList,
+        totalPages,
       })
     }
   }
 
   updatedPageNo = no => {
     this.setState({pageNo: no}, this.getUpcomingMoviesData)
+  }
+
+  goToPrevPage = () => {
+    const {totalPages, pageNo} = this.state
+    if (pageNo < totalPages && pageNo > 1) {
+      this.setState(
+        prevState => ({
+          pageNo: prevState.pageNo - 1,
+        }),
+        this.getUpcomingMoviesData,
+      )
+    }
+  }
+
+  goToNextPage = () => {
+    const {totalPages, pageNo} = this.state
+    if (pageNo < totalPages) {
+      this.setState(
+        prevState => ({
+          pageNo: prevState.pageNo + 1,
+        }),
+        this.getUpcomingMoviesData,
+      )
+    }
   }
 
   renderLoadingView = () => (
@@ -78,7 +104,7 @@ class UpcomingMovies extends Component {
   )
 
   renderSuccessView = () => {
-    const {upcomingMoviesData, totalPages} = this.state
+    const {upcomingMoviesData, pagesList, pageNo} = this.state
 
     return (
       <>
@@ -89,13 +115,32 @@ class UpcomingMovies extends Component {
           ))}
         </ul>
         <ul className="pages-list-container">
-          {totalPages.map(eachItem => (
+          <li>
+            <button
+              onClick={this.goToPrevPage}
+              type="button"
+              className="custom-button"
+            >
+              Prev
+            </button>
+          </li>
+          {pagesList.map(eachItem => (
             <Pages
               key={eachItem}
               pageNo={eachItem}
+              no={pageNo}
               updatedPageNo={this.updatedPageNo}
             />
           ))}
+          <li>
+            <button
+              onClick={this.goToNextPage}
+              type="button"
+              className="custom-button"
+            >
+              Next
+            </button>
+          </li>
         </ul>
       </>
     )

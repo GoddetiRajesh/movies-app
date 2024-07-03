@@ -1,5 +1,5 @@
 .page-item {
-  margin-left: 5px;
+  margin: 2px;
 }
 .page-button {
   border: 1px solid black;
@@ -9,4 +9,8 @@
   cursor: pointer;
   padding: 5px;
   background-color: #98dced;
+}
+.active-bg {
+  background-color: #f06007;
+  color: white;
 }

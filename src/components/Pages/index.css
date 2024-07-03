@@ -1,0 +1,12 @@
+.page-item {
+  margin-left: 5px;
+}
+.page-button {
+  border: 1px solid black;
+  font-family: 'Roboto';
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px;
+  background-color: #98dced;
+}

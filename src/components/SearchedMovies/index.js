@@ -75,6 +75,7 @@ class SearchedMovies extends Component {
 
   render() {
     const {apiStatus} = this.state
+
     switch (apiStatus) {
       case 'SUCCESS':
         return this.renderSuccessView()

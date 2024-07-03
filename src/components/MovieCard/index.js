@@ -11,7 +11,7 @@ const MoviesCard = props => {
       <img
         className="movie-image"
         src={`https://image.tmdb.org/t/p/w500/${posterPath}`}
-        alt="poster_path"
+        alt={title}
       />
       <div className="details-container">
         <h1 className="movie-title">{title}</h1>

@@ -2,6 +2,7 @@ import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 
 import MovieCard from '../MovieCard'
+import Pages from '../Pages'
 
 import './index.css'
 
@@ -12,16 +13,22 @@ const apiStatusConstants = {
 }
 
 class PopularMovies extends Component {
-  state = {apiStatus: apiStatusConstants.initial, popularMoviesData: []}
+  state = {
+    apiStatus: apiStatusConstants.initial,
+    popularMoviesData: [],
+    pageNo: 1,
+    totalPages: 0,
+  }
 
   componentDidMount() {
     this.getpopularMoviesData()
   }
 
   getpopularMoviesData = async () => {
+    const {pageNo} = this.state
     this.setState({apiStatus: apiStatusConstants.inProgress})
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/popular?api_key=4b6447742932745f75f6186d51933b0b&language=en-US&page=1`,
+      `https://api.themoviedb.org/3/movie/popular?api_key=4b6447742932745f75f6186d51933b0b&language=en-US&page=${pageNo}`,
     )
     const data = await response.json()
     if (response.ok) {
@@ -43,11 +50,25 @@ class PopularMovies extends Component {
         voteCount: eachItem.vote_count,
       }))
 
+      let totalPages = data.total_pages
+      if (totalPages > 500) {
+        totalPages = 500
+      }
+      const totalPagesList = []
+      for (let i = 1; i <= totalPages; i += 1) {
+        totalPagesList.push(i)
+      }
+
       this.setState({
         apiStatus: apiStatusConstants.success,
         popularMoviesData: updatedData,
+        totalPages: totalPagesList,
       })
     }
+  }
+
+  updatedPageNo = no => {
+    this.setState({pageNo: no}, this.getpopularMoviesData)
   }
 
   renderLoadingView = () => (
@@ -57,7 +78,7 @@ class PopularMovies extends Component {
   )
 
   renderSuccessView = () => {
-    const {popularMoviesData} = this.state
+    const {popularMoviesData, totalPages} = this.state
 
     return (
       <>
@@ -65,6 +86,15 @@ class PopularMovies extends Component {
         <ul className="popular-list-container">
           {popularMoviesData.map(eachItem => (
             <MovieCard key={eachItem.id} movieDetails={eachItem} />
+          ))}
+        </ul>
+        <ul className="pages-list-container">
+          {totalPages.map(eachItem => (
+            <Pages
+              key={eachItem}
+              pageNo={eachItem}
+              updatedPageNo={this.updatedPageNo}
+            />
           ))}
         </ul>
       </>

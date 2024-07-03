@@ -100,7 +100,7 @@ class SingleMovieDetails extends Component {
           <img
             className="mv-image"
             src={`https://image.tmdb.org/t/p/w500/${posterPath}`}
-            alt="poster_path"
+            alt={title}
           />
           <div className="mv-details">
             <p className="para">

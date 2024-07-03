@@ -2,6 +2,7 @@ import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 
 import MovieCard from '../MovieCard'
+import Pages from '../Pages'
 
 import './index.css'
 
@@ -12,16 +13,22 @@ const apiStatusConstants = {
 }
 
 class UpcomingMovies extends Component {
-  state = {apiStatus: apiStatusConstants.initial, upcomingMoviesData: []}
+  state = {
+    apiStatus: apiStatusConstants.initial,
+    upcomingMoviesData: [],
+    pageNo: 1,
+    totalPages: 0,
+  }
 
   componentDidMount() {
     this.getUpcomingMoviesData()
   }
 
   getUpcomingMoviesData = async () => {
+    const {pageNo} = this.state
     this.setState({apiStatus: apiStatusConstants.inProgress})
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=4b6447742932745f75f6186d51933b0b&language=en-US&page=1`,
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=4b6447742932745f75f6186d51933b0b&language=en-US&page=${pageNo}`,
     )
     const data = await response.json()
     if (response.ok) {
@@ -35,7 +42,7 @@ class UpcomingMovies extends Component {
         originalTitle: eachItem.original_title,
         overview: eachItem.overview,
         popularity: eachItem.popularity,
-        poster_path: eachItem.poster_path,
+        posterPath: eachItem.poster_path,
         releaseDate: eachItem.release_date,
         title: eachItem.title,
         video: eachItem.video,
@@ -43,11 +50,25 @@ class UpcomingMovies extends Component {
         voteCount: eachItem.vote_count,
       }))
 
+      let totalPages = data.total_pages
+      if (totalPages > 500) {
+        totalPages = 500
+      }
+      const totalPagesList = []
+      for (let i = 1; i <= totalPages; i += 1) {
+        totalPagesList.push(i)
+      }
+
       this.setState({
         apiStatus: apiStatusConstants.success,
         upcomingMoviesData: updatedData,
+        totalPages: totalPagesList,
       })
     }
+  }
+
+  updatedPageNo = no => {
+    this.setState({pageNo: no}, this.getUpcomingMoviesData)
   }
 
   renderLoadingView = () => (
@@ -57,7 +78,7 @@ class UpcomingMovies extends Component {
   )
 
   renderSuccessView = () => {
-    const {upcomingMoviesData} = this.state
+    const {upcomingMoviesData, totalPages} = this.state
 
     return (
       <>
@@ -65,6 +86,15 @@ class UpcomingMovies extends Component {
         <ul className="upcoming-list-container">
           {upcomingMoviesData.map(eachItem => (
             <MovieCard key={eachItem.id} movieDetails={eachItem} />
+          ))}
+        </ul>
+        <ul className="pages-list-container">
+          {totalPages.map(eachItem => (
+            <Pages
+              key={eachItem}
+              pageNo={eachItem}
+              updatedPageNo={this.updatedPageNo}
+            />
           ))}
         </ul>
       </>

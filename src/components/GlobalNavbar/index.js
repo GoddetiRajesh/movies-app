@@ -14,34 +14,36 @@ const GlobalNavbar = props => {
       <ul className="nav-list-container">
         <Link to="/" className="link-container">
           <li>
-            <button type="button" className="nav-items">
+            <h1 type="button" className="nav-items">
               Popular
-            </button>
+            </h1>
           </li>
         </Link>
         <Link to="/top-rated" className="link-container">
           <li>
-            <button type="button" className="nav-items">
+            <h1 type="button" className="nav-items">
               Top Rated
-            </button>
+            </h1>
           </li>
         </Link>
         <Link to="/upcoming" className="link-container">
           <li>
-            <button type="button" className="nav-items">
+            <h1 type="button" className="nav-items">
               Upcoming
-            </button>
+            </h1>
           </li>
         </Link>
       </ul>
       <div className="search-container">
-        <input
-          onChange={onChangeSearchValue}
-          type="search"
-          placeholder="Enter Movie Name"
-          value={searchValue}
-          className="search-input"
-        />
+        <Link to="/">
+          <input
+            onChange={onChangeSearchValue}
+            type="search"
+            placeholder="Enter Movie Name"
+            value={searchValue}
+            className="search-input"
+          />
+        </Link>
         <Link to="/searched-movies">
           <button type="button" className="search-button">
             Search

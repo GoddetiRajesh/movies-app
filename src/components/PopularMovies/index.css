@@ -20,3 +20,10 @@
   font-family: 'Roboto';
   color: #e30b50;
 }
+.pages-list-container {
+  list-style-type: none;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  overflow-y: auto;
+}
